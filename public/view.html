@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>ShareMe viewer</title>
+  <style>
+    :root { color-scheme: dark; --bg: #0f1115; --panel: #1a1d24; --text: #e8e8ea; --muted: #9aa0aa; --accent: #3fa9ff; --danger: #ff4d4f; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .center { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .card { background: var(--panel); border-radius: 12px; padding: 24px; max-width: 440px; width: 100%; box-shadow: 0 8px 30px #0008; }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    p { margin: 8px 0; color: var(--muted); }
+    .row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    button, input { font: inherit; border-radius: 8px; border: 1px solid #333a46; padding: 9px 14px; background: #232833; color: var(--text); }
+    button { cursor: pointer; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #001222; font-weight: 600; }
+    button.danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+    input { flex: 1; min-width: 0; }
+    #stage { position: fixed; inset: 0; display: none; flex-direction: column; background: #000; }
+    #bar { display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: #000c; font-size: 13px; }
+    #bar .live { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    #bar .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+    #bar .spacer { flex: 1; }
+    #stats { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #wrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; }
+    canvas { max-width: 100%; max-height: 100%; image-rendering: auto; background: #000; }
+    #paused { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); background: #000c; padding: 6px 12px; border-radius: 6px; display: none; }
+    #bar button { padding: 4px 10px; font-size: 13px; }
+    @media (max-width: 520px) { #stats { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="center" id="screen-code" hidden>
+    <div class="card">
+      <h1>ShareMe viewer</h1>
+      <p>Paste the one-time link or code you were sent.</p>
+      <div class="row"><input id="code-input" placeholder="code" autocomplete="off" spellcheck="false"><button class="primary" id="code-go">Open</button></div>
+    </div>
+  </div>
+
+  <div class="center" id="screen-msg" hidden>
+    <div class="card"><h1 id="msg-title">Connecting…</h1><p id="msg-body"></p></div>
+  </div>
+
+  <div class="center" id="screen-consent" hidden>
+    <div class="card">
+      <h1><span id="consent-from"></span> wants to share their Minecraft screen with you</h1>
+      <p>You will see their game window live. They can't see you, and you can't control their game.
+         Nothing starts until you click Watch, and you can stop any time.</p>
+      <p>This link works only once.</p>
+      <div class="row"><button class="primary" id="btn-accept">Watch</button><button id="btn-decline">Decline</button></div>
+    </div>
+  </div>
+
+  <div id="stage">
+    <div id="bar">
+      <span class="live"><span class="dot"></span>Watching <span id="stage-from"></span></span>
+      <span id="stats"></span>
+      <span class="spacer"></span>
+      <button id="btn-full">Fullscreen</button>
+      <button class="danger" id="btn-stop">Stop</button>
+    </div>
+    <div id="wrap"><canvas id="canvas" width="1280" height="720"></canvas><div id="paused">The sharer paused the stream</div></div>
+  </div>
+
+  <script src="/view.js"></script>
+</body>
+</html>

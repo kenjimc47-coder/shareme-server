@@ -1,0 +1,18 @@
+{
+  "name": "shareme-server",
+  "version": "0.1.0",
+  "description": "Signaling + relay server for the ShareMe Minecraft mod",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node test/e2e.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "ws": "8.18.3"
+  },
+  "license": "MIT"
+}

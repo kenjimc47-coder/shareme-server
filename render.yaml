@@ -1,0 +1,12 @@
+# One-click deploy on Render (render.com): New -> Blueprint -> pick this repo -> Apply.
+# Render gives you an https URL with TLS, so the mod connects over wss:// (encrypted).
+services:
+  - type: web
+    name: shareme
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    envVars:
+      - key: SHAREME_AUTH
+        value: mojang   # only real (premium) Minecraft accounts; set to "off" if a friend uses a non-premium account
